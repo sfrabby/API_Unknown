@@ -1,4 +1,4 @@
-class ProductController {
+class GetProductModel {
   int? id;
   String? title;
   String? slug;
@@ -9,7 +9,7 @@ class ProductController {
   String? creationAt;
   String? updatedAt;
 
-  ProductController(
+  GetProductModel(
       {this.id,
         this.title,
         this.slug,
@@ -20,7 +20,7 @@ class ProductController {
         this.creationAt,
         this.updatedAt});
 
-  ProductController.fromJson(Map<String, dynamic> json) {
+  GetProductModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     slug = json['slug'];
