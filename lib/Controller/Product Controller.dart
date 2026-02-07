@@ -10,6 +10,9 @@ class GetProductController extends GetxController {
     try {
       var url = Uri.parse(" https://api.escuelajs.co/api/v1/products");
       var response = await http.get(url);
+      if(response.statusCode == 200){
+
+      }
 
     } catch (error) {
       log(error.toString());
