@@ -6,7 +6,10 @@ class GetApi extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.teal,
+        title: Text("Api practice"),
+      ),
 
     );
   }
