@@ -6,10 +6,8 @@ import '../Controller/Product Controller.dart';
 class GetApi extends StatelessWidget {
   GetApi({super.key});
 
+  final GetProductController getProductController = Get.put(GetProductController());
   @override
-  final GetProductController getProductController = Get.put(
-    GetProductController(),
-  );
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -19,9 +17,9 @@ class GetApi extends StatelessWidget {
       ),
       body: Obx(() {
         return ListView.builder(
-          itemCount: getProductController.ProductList.length,
+          itemCount: getProductController.productList.length,
           itemBuilder: (context, index) {
-            var product = getProductController.ProductList[index];
+            var product = getProductController.productList[index];
             return Card(
               child: ListTile(
                 title: Text(product.title.toString()),
