@@ -4,7 +4,16 @@ import 'package:api_unknown/Model/GetProductModel.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 
+
+
 class GetProductController extends GetxController {
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+    GetProduct();
+  }
+
   RxBool isLoading = false.obs;
 
   RxList<GetProductModel> ProductList = <GetProductModel>[].obs;
@@ -16,7 +25,7 @@ class GetProductController extends GetxController {
       var response = await http.get(url);
       if(response.statusCode == 200){
         List<GetProductModel> JsonData = jsonDecode(response.body);
-        ProductList.value = JsonData.map((X)=>GetProductModel.fromJson(X as Map<String, dynamic>)).toList();
+        ProductList.value = JsonData.map((X)=>GetProductModel.fromJson( X as Map<String, dynamic>)).toList();
 
 
         return ProductList;

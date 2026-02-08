@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:get/get.dart';
+
+import '../Controller/Product Controller.dart';
 
 class GetApi extends StatelessWidget {
-  const GetApi({super.key});
+  GetApi({super.key});
 
   @override
+  final GetProductController getProductController = Get.put(
+    GetProductController(),
+  );
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -12,16 +17,24 @@ class GetApi extends StatelessWidget {
         title: Text("Api practice", style: TextStyle(color: Colors.white)),
         centerTitle: true,
       ),
-      body: ListView.builder(
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          return Card(child: ListTile(
-            title: Text("Hello"),
-            subtitle: Text("Price"),
-            leading: CircleAvatar(child: Text("I"),backgroundColor: Colors.teal ,),
-          ));
-        },
-      ),
+      body: Obx(() {
+        return ListView.builder(
+          itemCount: getProductController.ProductList.length,
+          itemBuilder: (context, index) {
+            var product = getProductController.ProductList[index];
+            return Card(
+              child: ListTile(
+                title: Text(product.title.toString()),
+                subtitle: Text("Price"),
+                leading: CircleAvatar(
+                  child: Text("I"),
+                  backgroundColor: Colors.teal,
+                ),
+              ),
+            );
+          },
+        );
+      }),
     );
   }
 }
