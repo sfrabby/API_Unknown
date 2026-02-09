@@ -1,89 +1,56 @@
-class CreateProductModel {
-  int? id;
-  String? title;
-  String? slug;
-  int? price;
-  String? description;
-  Category? category;
-  List<String>? images;
-  String? creationAt;
-  String? updatedAt;
+import 'dart:convert';
+import 'dart:developer';
+import 'package:http/http.dart' as http;
+import 'package:get/get.dart';
 
-  CreateProductModel(
-      {this.id,
-        this.title,
-        this.slug,
-        this.price,
-        this.description,
-        this.category,
-        this.images,
-        this.creationAt,
-        this.updatedAt});
+import '../Model/Create Product Model.dart';
 
-  CreateProductModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'];
-    slug = json['slug'];
-    price = json['price'];
-    description = json['description'];
-    category = json['category'] != null
-        ? new Category.fromJson(json['category'])
-        : null;
-    images = json['images'].cast<String>();
-    creationAt = json['creationAt'];
-    updatedAt = json['updatedAt'];
-  }
+class CreateProductController extends GetxController {
+  RxBool isLoading = false.obs;
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['slug'] = this.slug;
-    data['price'] = this.price;
-    data['description'] = this.description;
-    if (this.category != null) {
-      data['category'] = this.category!.toJson();
+  // নতুন তৈরি হওয়া প্রোডাক্টের ডাটা এখানে জমা থাকবে
+  Rx<CreateProductModel?> createdProduct = Rx<CreateProductModel?>(null);
+
+  // প্রোডাক্ট তৈরি করার ফাংশন
+  Future<void> createProduct(String title, int price, String desc, int categoryId, List<String> images) async {
+    try {
+      isLoading.value = true;
+
+      var url = Uri.parse("https://api.escuelajs.co/api/v1/products/");
+
+      // ১. বডি তৈরি (যা API-তে পাঠাতে হবে)
+      Map<String, dynamic> bodyData = {
+        "title": title,
+        "price": price,
+        "description": desc,
+        "categoryId": categoryId,
+        "images": images
+      };
+
+      // ২. POST রিকোয়েস্ট পাঠানো
+      var response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(bodyData),
+      );
+
+      if (response.statusCode == 201) { // প্রোডাক্ট তৈরি হলে সাধারণত 201 কোড আসে
+        var decodedData = jsonDecode(response.body);
+
+        // ৩. রেসপন্স ডাটাকে মডেলে কনভার্ট করা
+        createdProduct.value = CreateProductModel.fromJson(decodedData);
+
+        Get.snackbar("Success", "প্রোডাক্ট সফলভাবে তৈরি হয়েছে!");
+        log("New Product ID: ${createdProduct.value?.id}");
+      } else {
+        log("Server Error: ${response.statusCode} - ${response.body}");
+        Get.snackbar("Error", "সার্ভার এরর: ${response.statusCode}");
+      }
+    } catch (error) {
+      log("Error: $error");
+      Get.snackbar("Error", "কিছু একটা ভুল হয়েছে!");
+    } finally {
+      isLoading.value = false;
     }
-    data['images'] = this.images;
-    data['creationAt'] = this.creationAt;
-    data['updatedAt'] = this.updatedAt;
-    return data;
-  }
-}
-
-class Category {
-  int? id;
-  String? name;
-  String? slug;
-  String? image;
-  String? creationAt;
-  String? updatedAt;
-
-  Category(
-      {this.id,
-        this.name,
-        this.slug,
-        this.image,
-        this.creationAt,
-        this.updatedAt});
-
-  Category.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    slug = json['slug'];
-    image = json['image'];
-    creationAt = json['creationAt'];
-    updatedAt = json['updatedAt'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['slug'] = this.slug;
-    data['image'] = this.image;
-    data['creationAt'] = this.creationAt;
-    data['updatedAt'] = this.updatedAt;
-    return data;
   }
 }
