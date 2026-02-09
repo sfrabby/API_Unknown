@@ -101,19 +101,21 @@ class CreateProductScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             // ডাটা সফলভাবে তৈরি হলে নিচে আইডি দেখাবে
-            Obx(() {
-              if (controller.createdProduct.value != null) {
-                return Container(
-                  padding: const EdgeInsets.all(15),
-                  color: Colors.green.shade50,
-                  child: Text(
-                    "Success! Product ID: ${controller.createdProduct.value!.id} has been created.",
-                    style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
-                  ),
-                );
-              }
-              return const SizedBox();
-            }),
+            Center(
+              child: Obx(() {
+                if (controller.createdProduct.value != null) {
+                  return Container(
+                    padding: const EdgeInsets.all(15),
+                    color: Colors.green.shade50,
+                    child: Text(
+                      "Success! Product ID: ${controller.createdProduct.value!.id} has been created.",
+                      style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                    ),
+                  );
+                }
+                return const SizedBox();
+              }),
+            ),
           ],
         ),
       ),
